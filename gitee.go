@@ -103,7 +103,7 @@ func (g *Connector) ConnectorName() plugin.Translator {
 }
 
 func (g *Connector) ConnectorSlugName() string {
-	return "basic"
+	return "gitee"
 }
 
 func (g *Connector) ConnectorSender(ctx *plugin.GinContext, receiverURL string) (redirectURL string) {
