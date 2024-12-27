@@ -50,25 +50,9 @@ type Connector struct {
 }
 
 type ConnectorConfig struct {
-	Name string `json:"name"`
-
+	Name         string `json:"name"`
 	ClientID     string `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
-	AuthorizeUrl string `json:"authorize_url"`
-	TokenUrl     string `json:"token_url"`
-	UserJsonUrl  string `json:"user_json_url"`
-
-	UserIDJsonPath          string `json:"user_id_json_path"`
-	UserDisplayNameJsonPath string `json:"user_display_name_json_path"`
-	UserUsernameJsonPath    string `json:"user_username_json_path"`
-	UserEmailJsonPath       string `json:"user_email_json_path"`
-	UserAvatarJsonPath      string `json:"user_avatar_json_path"`
-
-	CheckEmailVerified    bool   `json:"check_email_verified"`
-	EmailVerifiedJsonPath string `json:"email_verified_json_path"`
-
-	Scope   string `json:"scope"`
-	LogoSVG string `json:"logo_svg"`
 }
 
 func init() {
@@ -92,7 +76,7 @@ func (g *Connector) Info() plugin.Info {
 }
 
 func (g *Connector) ConnectorLogoSVG() string {
-	return g.Config.LogoSVG
+	return "PHN2ZyB0PSIxNzM1MjY3MTEwOTE4IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjQ1NDYiIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4Ij48cGF0aCBkPSJNNTEyIDEwMjEuNzI0NDQ0NDVBNTA5LjcyNDQ0NDQ1IDUwOS43MjQ0NDQ0NSAwIDEgMSA1MTIgMi4yNzU1NTU1NWE1MDkuNzI0NDQ0NDUgNTA5LjcyNDQ0NDQ1IDAgMCAxIDAgMTAxOS40NDg4ODg5eiBtMjU3Ljk5MzM4NjY3LTU2Ni4zNzY2NzU1Nkg0ODAuNTQyNzJhMjUuMTk0OTUxMTEgMjUuMTk0OTUxMTEgMCAwIDAtMjUuMTk0OTUxMTEgMjUuMTk0OTUxMTF2NjIuOTE0NTZjMCAxMy45MDgxOTU1NSAxMS4yODY3NTU1NSAyNS4xOTQ5NTExMSAyNS4xMjIxMzMzMyAyNS4xOTQ5NTExMWgxNzYuMjE5MDIyMjNjMTMuOTgxMDEzMzMgMCAyNS4xOTQ5NTExMSAxMS4yODY3NTU1NSAyNS4xOTQ5NTExIDI1LjEyMjEzMzM0djEyLjU5NzQ3NTU1YzAgNDEuNzI0NTg2NjctMzMuNzg3NDQ4ODkgNzUuNTEyMDM1NTUtNzUuNTEyMDM1NTUgNzUuNTEyMDM1NTVIMzY3LjIzODI1Nzc4YTI1LjE5NDk1MTExIDI1LjE5NDk1MTExIDAgMCAxLTI1LjEyMjEzMzMzLTI1LjEyMjEzMzMzVjQxNy42MjgxNmMwLTQxLjcyNDU4NjY3IDMzLjc4NzQ0ODg5LTc1LjUxMjAzNTU1IDc1LjQzOTIxNzc3LTc1LjUxMjAzNTU1aDM1Mi40MzgwNDQ0NWMxMy44MzUzNzc3OCAwIDI1LjEyMjEzMzMzLTExLjI4Njc1NTU1IDI1LjEyMjEzMzMzLTI1LjE5NDk1MTEydi02Mi45MTQ1NmEyNS4xOTQ5NTExMSAyNS4xOTQ5NTExMSAwIDAgMC0yNS4xMjIxMzMzMy0yNS4xOTQ5NTExMWgtMzUyLjQzODA0NDQ1YTE4OC43NDM2OCAxODguNzQzNjggMCAwIDAtMTg4Ljc0MzY4IDE4OC44MTY0OTc3OHYzNTIuMzY1MjI2NjdjMCAxMy45MDgxOTU1NSAxMS4yODY3NTU1NSAyNS4xOTQ5NTExMSAyNS4xOTQ5NTExMSAyNS4xOTQ5NTExMWgzNzEuMjI1MDMxMTJhMTY5Ljg4Mzg3NTU1IDE2OS44ODM4NzU1NSAwIDAgMCAxNjkuOTU2NjkzMzMtMTY5Ljg4Mzg3NTU2VjQ4MC41NDI3MmEyNS4xOTQ5NTExMSAyNS4xOTQ5NTExMSAwIDAgMC0yNS4xOTQ5NTExMS0yNS4xOTQ5NTExMXoiIGZpbGw9IiNDNzFEMjMiIHAtaWQ9IjQ1NDciPjwvcGF0aD48L3N2Zz4="
 }
 
 func (g *Connector) ConnectorName() plugin.Translator {
@@ -111,11 +95,11 @@ func (g *Connector) ConnectorSender(ctx *plugin.GinContext, receiverURL string) 
 		ClientID:     g.Config.ClientID,
 		ClientSecret: g.Config.ClientSecret,
 		Endpoint: oauth2.Endpoint{
-			AuthURL:  g.Config.AuthorizeUrl,
-			TokenURL: g.Config.TokenUrl,
+			AuthURL:  "https://gitee.com/oauth/authorize",
+			TokenURL: "https://gitee.com/oauth/token",
 		},
 		RedirectURL: receiverURL,
-		Scopes:      strings.Split(g.Config.Scope, ","),
+		Scopes:      strings.Split("user_info,emails", ","),
 	}
 	return oauth2Config.AuthCodeURL("state")
 }
@@ -127,8 +111,8 @@ func (g *Connector) ConnectorReceiver(ctx *plugin.GinContext, receiverURL string
 		ClientID:     g.Config.ClientID,
 		ClientSecret: g.Config.ClientSecret,
 		Endpoint: oauth2.Endpoint{
-			AuthURL:   g.Config.AuthorizeUrl,
-			TokenURL:  g.Config.TokenUrl,
+			AuthURL:   "https://gitee.com/oauth/authorize",
+			TokenURL:  "https://gitee.com/oauth/token",
 			AuthStyle: oauth2.AuthStyleAutoDetect,
 		},
 		RedirectURL: receiverURL,
@@ -144,7 +128,7 @@ func (g *Connector) ConnectorReceiver(ctx *plugin.GinContext, receiverURL string
 	))
 	client.Timeout = 15 * time.Second
 
-	response, err := client.Get(g.Config.UserJsonUrl)
+	response, err := client.Get("https://gitee.com/api/v5/user")
 	if err != nil {
 		return userInfo, fmt.Errorf("failed getting user info: %s", err.Error())
 	}
@@ -155,38 +139,20 @@ func (g *Connector) ConnectorReceiver(ctx *plugin.GinContext, receiverURL string
 		MetaInfo: string(data),
 	}
 
-	if len(g.Config.UserIDJsonPath) > 0 {
-		userInfo.ExternalID = gjson.GetBytes(data, g.Config.UserIDJsonPath).String()
-	}
+	userInfo.ExternalID = gjson.GetBytes(data, "id").String()
 	if len(userInfo.ExternalID) == 0 {
-		log.Errorf("fail to get user id from json path: %s", g.Config.UserIDJsonPath)
+		log.Errorf("fail to get user id")
 		return userInfo, nil
 	}
-	if len(g.Config.UserDisplayNameJsonPath) > 0 {
-		userInfo.DisplayName = gjson.GetBytes(data, g.Config.UserDisplayNameJsonPath).String()
-	}
-	if len(g.Config.UserUsernameJsonPath) > 0 {
-		userInfo.Username = gjson.GetBytes(data, g.Config.UserUsernameJsonPath).String()
-	}
-	if len(g.Config.UserEmailJsonPath) > 0 {
-		userInfo.Email = gjson.GetBytes(data, g.Config.UserEmailJsonPath).String()
-	}
-	if g.Config.CheckEmailVerified && len(g.Config.EmailVerifiedJsonPath) > 0 {
-		emailVerified := gjson.GetBytes(data, g.Config.EmailVerifiedJsonPath).Bool()
-		if !emailVerified {
-			userInfo.Email = ""
-		}
-	}
-	if len(g.Config.UserAvatarJsonPath) > 0 {
-		userInfo.Avatar = gjson.GetBytes(data, g.Config.UserAvatarJsonPath).String()
-	}
-
+	userInfo.DisplayName = gjson.GetBytes(data, "name").String()
+	userInfo.Username = gjson.GetBytes(data, "login").String()
+	userInfo.Avatar = gjson.GetBytes(data, "avatar_url").String()
 	emailResponse, err := client.Get("https://gitee.com/api/v5/emails")
 	if err != nil {
 		return userInfo, fmt.Errorf("failed getting user email: %s", err.Error())
 	}
 	defer emailResponse.Body.Close()
-	emailData, _ := io.ReadAll(response.Body)
+	emailData, _ := io.ReadAll(emailResponse.Body)
 	userInfo.Email = gjson.GetBytes(emailData, "0.email").String()
 	userInfo = g.formatUserInfo(userInfo)
 	return userInfo, nil
@@ -216,38 +182,6 @@ func (g *Connector) ConfigFields() []plugin.ConfigField {
 		i18n.ConfigClientIDTitle, i18n.ConfigClientIDDescription, g.Config.ClientID, true))
 	fields = append(fields, createTextInput("client_secret",
 		i18n.ConfigClientSecretTitle, i18n.ConfigClientSecretDescription, g.Config.ClientSecret, true))
-	fields = append(fields, createTextInput("authorize_url",
-		i18n.ConfigAuthorizeUrlTitle, i18n.ConfigAuthorizeUrlDescription, g.Config.AuthorizeUrl, true))
-	fields = append(fields, createTextInput("token_url",
-		i18n.ConfigTokenUrlTitle, i18n.ConfigTokenUrlDescription, g.Config.TokenUrl, true))
-	fields = append(fields, createTextInput("user_json_url",
-		i18n.ConfigUserJsonUrlTitle, i18n.ConfigUserJsonUrlDescription, g.Config.UserJsonUrl, true))
-	fields = append(fields, createTextInput("user_id_json_path",
-		i18n.ConfigUserIDJsonPathTitle, i18n.ConfigUserIDJsonPathDescription, g.Config.UserIDJsonPath, true))
-	fields = append(fields, createTextInput("user_display_name_json_path",
-		i18n.ConfigUserDisplayNameJsonPathTitle, i18n.ConfigUserDisplayNameJsonPathDescription, g.Config.UserDisplayNameJsonPath, false))
-	fields = append(fields, createTextInput("user_username_json_path",
-		i18n.ConfigUserUsernameJsonPathTitle, i18n.ConfigUserUsernameJsonPathDescription, g.Config.UserUsernameJsonPath, false))
-	fields = append(fields, createTextInput("user_email_json_path",
-		i18n.ConfigUserEmailJsonPathTitle, i18n.ConfigUserEmailJsonPathDescription, g.Config.UserEmailJsonPath, false))
-	fields = append(fields, createTextInput("user_avatar_json_path",
-		i18n.ConfigUserAvatarJsonPathTitle, i18n.ConfigUserAvatarJsonPathDescription, g.Config.UserAvatarJsonPath, false))
-	fields = append(fields, plugin.ConfigField{
-		Name:  "check_email_verified",
-		Type:  plugin.ConfigTypeSwitch,
-		Title: plugin.MakeTranslator(i18n.ConfigCheckEmailVerifiedTitle),
-		Value: g.Config.CheckEmailVerified,
-		UIOptions: plugin.ConfigFieldUIOptions{
-			Label: plugin.MakeTranslator(i18n.ConfigCheckEmailVerifiedLabel),
-		},
-	})
-	fields = append(fields, createTextInput("email_verified_json_path",
-		i18n.ConfigEmailVerifiedJsonPathTitle, i18n.ConfigEmailVerifiedJsonPathDescription, g.Config.EmailVerifiedJsonPath, false))
-	fields = append(fields, createTextInput("scope",
-		i18n.ConfigScopeTitle, i18n.ConfigScopeDescription, g.Config.Scope, false))
-	fields = append(fields, createTextInput("logo_svg",
-		i18n.ConfigLogoSVGTitle, i18n.ConfigLogoSVGDescription, g.Config.LogoSVG, false))
-
 	return fields
 }
 
