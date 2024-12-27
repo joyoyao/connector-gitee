@@ -17,6 +17,6 @@
 
 slug_name: gitee_connector
 type: connector
-version: 1.0.0
+version: 1.2.9
 author: joyoyao
 link: https://github.com/joyoyao/connector-gitee
