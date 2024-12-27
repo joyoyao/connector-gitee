@@ -22,9 +22,9 @@ plugin:
         other: Gitee
       info:
         name:
-          other: OAuth2 Basic
+          other: Gitee Connector
         description:
-          other: Generic OAuth2 Plugin
+          other: Connect to Gitee for third-party login
       config:
         name:
           title:

@@ -22,9 +22,9 @@ plugin:
         other: Gitee
       info:
         name:
-          other: Gitee连接器
+          other: Gitee 连接器
         description:
-          other: 适用于各种 OAuth 登录的通用插件
+          other: 用于接入 Gitee 第三方登录
       config:
         name:
           title:
